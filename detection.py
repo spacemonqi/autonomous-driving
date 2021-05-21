@@ -55,6 +55,7 @@ class VideoStream:
 def check_rotation(path_video_file):
     # this returns meta-data of the video file in form of a dictionary
     meta_dict = ffmpeg.probe(path_video_file)
+    print(meta_dict['streams'][0]['tags'])
 
     # from the dictionary, meta_dict['streams'][0]['tags']['rotate'] is the key
     # we are looking for
@@ -141,7 +142,8 @@ if (INPUT=='file'):
     video = cv2.VideoCapture(VIDEO_PATH)
     imW = video.get(cv2.CAP_PROP_FRAME_WIDTH)
     imH = video.get(cv2.CAP_PROP_FRAME_HEIGHT)
-    rotateCode = check_rotation(VIDEO_PATH)
+    #rotateCode = check_rotation(VIDEO_PATH)
+    rotateCode = cv2.ROTATE_180
 
 if (OUTPUT=='file'):
     # names the output file
@@ -150,7 +152,7 @@ if (OUTPUT=='file'):
     if os.path.isfile(FILE_OUTPUT):
         os.remove(FILE_OUTPUT)
     # Parameters
-    fps = 3.5
+    fps = 30
     sz = (int(imW), int(imH))
     # Video writer object
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
@@ -185,8 +187,8 @@ while True:
             print('Reached the end of the video!')
             break
 
-        if rotateCode is not None:
-            frame1 = correct_rotation(frame1, rotateCode)
+       # if rotateCode is not None:
+        frame1 = correct_rotation(frame1, rotateCode)
 
     else:
         # Grab frame from video stream
@@ -240,7 +242,7 @@ while True:
     # Either Write to File or Stream
     if (OUTPUT=='file'):
         if (count%100==0):
-            print(count + ' frames processed')
+            print(str(count) + ' frames processed')
         vout.write(frame)
         if save_flag:
             cv2.imshow('Object detector', frame)

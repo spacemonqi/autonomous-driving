@@ -1,6 +1,7 @@
 videos/
 venv/
 output.mp4
+a.mp4
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
